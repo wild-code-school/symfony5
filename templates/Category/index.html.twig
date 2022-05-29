@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Wild Series{% endblock %}
+
+{% block body %}
+    {% include 'Wild/_header.html.twig' %}
+
+    <div class="container w-100 p-3 bg-light">
+        {% for category in categories %}
+            <a href="{{ path("category_show", {categoryName: category.name}) }}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+
+{% endblock %}

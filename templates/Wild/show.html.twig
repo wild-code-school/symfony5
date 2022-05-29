@@ -6,7 +6,31 @@
     {% include 'Wild/_header.html.twig' %}
 
     <div class="container w-100 p-3 bg-light">
-         <h1> {{ id }} </h1>
+
+
+        <div class="media">
+
+            <img class="align-self-start mr-3" src="{{ program.poster }}" alt="{{ program.title }} poster">
+
+            <div class="media-body">
+
+                <h1 class="mt-0">{{ program.title }}</h1>
+
+                <p>{{ program.synopsis }}</p>
+
+                <p>Catégorie : {{ program.category.name }}</p>
+
+            </div>
+
+        </div>
+
+
+        <a href="{{ path('program_index') }}">
+
+            Retour à la liste des programmes
+
+        </a>
+
     </div>
 
 {% endblock %}
