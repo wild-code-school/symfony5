@@ -19,7 +19,7 @@ class ProgramController extends AbstractController
         return $this->render('Wild/index.html.twig', ['programs' => $programs,]);
     }
 
-    #[Route('/{id}', methods: ['GET'], requirements: ['id' => '\d'], name: 'show')]
+    #[Route('/{id}', methods: ['GET'], name: 'show')]
     public function show(int $id, ProgramRepository $programRepository): Response
     {
         $program = $programRepository->findOneBy(['id' => $id]);

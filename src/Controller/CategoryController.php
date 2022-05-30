@@ -22,7 +22,8 @@ class CategoryController extends AbstractController
         return $this->render('Category/index.html.twig', ['categories' => $categories,]);
     }
 
-    #[Route ('/{categoryName}', methods: ['GET'], name: 'show')]
+
+    #[Route ('/{categoryName}', methods: ['GET'], name: 'show', requirements: ['id' => '\d+']), ]
     public function show(string $categoryName, CategoryRepository $categoryRepository, ProgramRepository $programRepository): Response
     {
 
