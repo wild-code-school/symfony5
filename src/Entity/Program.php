@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProgramRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProgramRepository::class)]
@@ -11,20 +12,56 @@ class Program
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $title;
+    private ?string $title;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $synopsis;
+    private ?string $synopsis;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $poster;
+    private ?string $poster;
 
-    #[ORM\ManyToOne(targetEntity: Category::class)]
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'programs')]
     #[ORM\JoinColumn(nullable: false)]
-    private $category;
+    private ?Category $category;
+
+    #[ORM\OneToMany(mappedBy: 'program', targetEntity: Saison::class)]
+    private $saisons;
+
+    public function __construct()
+    {
+        $this->saisons = new ArrayCollection();
+    }
+
+    public function getSaisons(): Collection
+    {
+        return $this->saisons;
+    }
+
+    public function addSaison(Saison $saison): self
+    {
+        if (!$this->saisons->contains($saison)) {
+            $this->saisons[] = $saison;
+            $saison->setSaison($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSaison(Saison $saison): self
+
+    {
+        if ($this->saison->removeElement($saison)) {
+            // set the owning side to null (unless already changed)
+            if ($saison->getSaison() === $this) {
+                $saison->setSaison(null);
+            }
+        }
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
