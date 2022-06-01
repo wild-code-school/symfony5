@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\EpisodeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,7 +24,7 @@ class Episode
     #[ORM\Column(type: 'text')]
     private ?string $synopsis;
 
-    #[ORM\ManyToOne(targetEntity: Saison::class)]
+    #[ORM\ManyToOne(targetEntity: Saison::class, inversedBy: 'episodes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Saison $saison;
 

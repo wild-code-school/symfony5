@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\SaisonRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,41 @@ class Saison
     #[ORM\ManyToOne(targetEntity: Program::class, inversedBy: 'saisons')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Program $program;
+
+    #[ORM\OneToMany(mappedBy: 'saison', targetEntity: Episode::class)]
+    private $episodes;
+
+    public function __construct()
+    {
+        $this->episodes = new ArrayCollection();
+    }
+
+    public function getEpisodes(): Collection
+    {
+        return $this->episodes;
+    }
+
+    public function addEpisode(Episode $episode): self
+    {
+        if (!$this->episodes->contains($episode)) {
+            $this->episodes[] = $episode;
+            $episode->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpisode(Episode $episode): self
+    {
+        if ($this->episodes->removeElement($episode)) {
+            // set the owning side to null (unless already changed)
+            if ($episode->getCategory() === $this) {
+                $episode->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
 
     public function getId(): ?int
     {

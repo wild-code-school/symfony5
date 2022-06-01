@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\SaisonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,5 +33,11 @@ class ProgramController extends AbstractController
 
         return $this->render('Wild/show.html.twig', ['program' => $program,]);
     }
+    #[Route('/{$programId}/season/{$seasonId}', methods: ['GET'], name: 'season_ show')]
+    public function showSeason(int $programId, int $seasonId)
+    {
+
+    }
+
 }
 

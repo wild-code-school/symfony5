@@ -19,7 +19,7 @@ class Category
     private ?string $name;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Program::class)]
-    private ArrayCollection $programs;
+    private  $programs;
 
     public function __construct()
     {
