@@ -4,41 +4,35 @@ namespace App\DataFixtures;
 
 use App\Entity\Episode;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Faker\ORM\Propel\Populator;
 
-class EpisodeFixtures extends Fixture
+class EpisodeFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
 
-        for($i=0; $i < 250; $i++) {
+        for ($s = 1; $s <= 5; $s++) {
+            for ($e = 1; $e <= 10; $e++) {
+                $episode = new Episode();
+                $episode
+                    ->setTitle($faker->sentence())
+                    ->setSaison($this->getReference('program_' . $s . '_saison_' . $s))
+                    ->setNumber($e)
+                    ->setSynopsis($faker->paragraphs(1, true));
 
-            $populator = new Populator($faker);
-            $episode = new Episode();
-            $populator->addEntity('number', 10);
-            $episode->setSynopsis($faker->paragraph(3, true));
-            $episode->setTitle($faker->word(1, true));
-            $episode->setSaison($this->getReference('saison_' . $faker->numberBetween(0, 25)));
-            $manager->persist($episode);
-
+                $manager->persist($episode);
+            }
         }
-
         $manager->flush();
-
     }
 
-    public function getDependencies()
-
+    public function getDependencies(): array
     {
-
         return [
-
             SaisonFixtures::class,
-
         ];
-
     }
 }

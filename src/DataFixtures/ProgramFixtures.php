@@ -18,23 +18,25 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
         ['title' => "Castelvania", "synopsis" => "OLALALALA les vampires je les fouettent", "reference" => "category_Animation"]
     ];
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-    foreach (self::SERIES as $keys => $values){
-        $program = new Program();
-        $program->setTitle($values['title']);
-        $program->setSynopsis($values['synopsis']);
-        $program->setCategory($this->getReference($values['reference']));
-        $manager->persist($program);
-        $manager->flush();
+        foreach (self::SERIES as $key => $programName) {
+            $key = $key + 1;
+
+            $program = new Program();
+        $program->setTitle($programName['title']);
+        $program->setSynopsis($programName['synopsis']);
+        $program->setCategory($this->getReference($programName['reference']));
+
+            $this->addReference('program_' . $key, $program);
+            $manager->persist($program);
         }
+        $manager->flush();
     }
 
-
-    public function getDependencies()
+    public function getDependencies(): array
     {
-        // TODO: Implement getDependencies() method.
-        return[
+        return [
             CategoryFixtures::class,
         ];
     }

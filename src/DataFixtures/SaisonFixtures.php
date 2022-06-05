@@ -6,41 +6,34 @@ use App\Entity\Saison;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use faker\factory;
-use Faker\ORM\Propel\Populator;
+use Faker\Factory;
 
-class SaisonFixtures extends Fixture
+class SaisonFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
 
-        for($i=0; $i < 25; $i++) {
+        for ($p = 1; $p <= 5; $p++) {
+            for ($s = 1; $s <= 5; $s++) {
+                $saison = new Saison();
+                $saison
+                    ->setAnnee($faker->year())
+                    ->setDescription($faker->paragraphs(3, true))
+                    ->setProgram($this->getReference('program_' . $p))
+                    ->setNombre($s);
 
-        $saison = new Saison();
-        $populator = new Populator($faker);
-
-        $populator->addEntity('nombre', 5);
-        $saison->setAnnee($faker->year());
-        $saison->setDescription($faker->paragraphs(3, true));
-
-        $saison->setProgram($this->getReference('program_' . $faker->numberBetween(0, 5)));
-
-        $manager->persist($saison);
+                $manager->persist($saison);
+                $this->addReference('program_' . $p . '_saison_' . $s, $saison);
+            }
         }
-
         $manager->flush();
     }
 
-    public function getDependencies()
-
+    public function getDependencies(): array
     {
-
         return [
-
-            ProgramFixtures::Fixtures::class,
-
+            ProgramFixtures::class,
         ];
-
     }
 }
