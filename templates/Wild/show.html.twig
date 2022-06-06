@@ -19,7 +19,7 @@
                 <p>{{ program.id }}</p>
 
                 {% for saison in saisons %}
-                    <a href="{{ path("program_season_show", { programId: program.id, seasonId: saison.id}) }}">Voir la saison {{ saison.nombre }}</a>
+                    <a href="{{ path("program_season_show", { "program_id": program.id, "season_id": saison.id}) }}>Voir la saison {{ saison.nombre }}</a>
                 {% endfor %}
 
                 <p>Catégorie : {{ program.category.name }}</p>

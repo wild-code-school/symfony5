@@ -3,7 +3,7 @@
 {% block body %}
     <div class="container w-100 p-3 bg-light">
         {% for serie in series %}
-            <a href="{{ path("program_show", { id: serie.id }) }}">Titre: {{ serie.title }}</a>
+            <a href="{{ path("program_show", {  "program_id": serie.id   }) }}">Titre: {{ serie.title }}</a>
             <img src="">
             <p>Synopsis: {{ serie.synopsis }}</p>
         {% endfor %}
