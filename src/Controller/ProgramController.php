@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
-
-use App\Entity\Saison;
-use App\Repository\EpisodeRepository;
-use App\Repository\SaisonRepository;
-use ContainerVpZSsI4\getSaisonRepositoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use Symfony\Component\HttpFoundation\Response;
+use ContainerVpZSsI4\getSaisonRepositoryService;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\Program;
 use App\Repository\ProgramRepository;
+use App\Repository\EpisodeRepository;
+use App\Repository\SaisonRepository;
+use App\Entity\Program;
+use App\Entity\Episode;
+use App\Entity\Saison;
+
+
 
 #[Route('/program', name: 'program_')]
 class ProgramController extends AbstractController
@@ -27,23 +29,35 @@ class ProgramController extends AbstractController
 
     #[Route('/{program_id}', methods: ['GET'], name: 'show')]
     #[Entity('program', options: ['id' => 'program_id'])]
-    public function show(Program $program, SaisonRepository $saisonRepository): Response
+    public function show(Program $program): Response
     {
 
-        $saisons = $saisonRepository->findBy(['program' => $program]);
         if (!$program) {
+
             throw $this->createNotFoundException(
                 'no program with id : ' . $id . ' found in program\'s table.'
             );
         }
-             return $this->render('Wild/show.html.twig', ['program' => $program, 'saisons' => $saisons]);
+        return $this->render('Wild/show.html.twig', ['program' => $program]);
     }
 
     #[Route('/{program_id}/season/{season_id}', methods: ['GET'], name: 'season_show')]
-    public function showSeason(Program $program, Saison $saison)
+    #[Entity('program', options: ['id' => 'program_id'])]
+    #[Entity('season', options: ['id' => 'saison_id'])]
+    public function showSeason(Saison $saison, Program $program): Response
     {
 
-        return $this->render('Wild/season_show.html.twig', ['program' => $program, 'saisons' => $saisons, 'episode' => $episode]);
+        return $this->render('Wild/season_show.html.twig', ['saison' => $saison]);
+    }
+
+    #[Route('/{program_id}/season/{season_id}/episode/{episode_id}', methods: ['GET'], name: 'episode_show')]
+    #[Entity('program', options: ['id' => 'program_id'])]
+    #[Entity('season', options: ['id' => 'saison_id'])]
+    #[Entity('episode', options: ['id' => 'episode_id'])]
+    public function showEpisode(Episode $episode, Saison $saison, Program $program): Response
+    {
+
+        return $this->render('Wild/episode_show.html.twig', ['episode' => $episode]);
     }
 
 }
