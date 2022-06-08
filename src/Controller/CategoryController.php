@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\Program;
+use App\Form\CategoryType;
 use App\Repository\ProgramRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 
 #[Route ('/category', name: 'category_')]
@@ -22,13 +23,29 @@ class CategoryController extends AbstractController
         return $this->render('Category/index.html.twig', ['categories' => $categories,]);
     }
 
+    #[Route ('/new', name: 'new')]
+    public function new(Request $request, CategoryRepository $categoryRepository): Response
+    {
+        $category = new Category();
 
-    #[Route ('/{categoryName}', methods: ['GET'], name: 'show', requirements: ['id' => '\d+']), ]
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $categoryRepository->add($category, true);
+            return $this->redirectToRoute('category_index');
+        }
+
+        return $this->renderForm('category/new.html.twig', [
+            'from' => $form
+        ]);
+    }
+
+    #[Route ('/{categoryName}', methods: ['GET'], name: 'show', requirements: ['id' => '\d+'])]
     public function show(string $categoryName, CategoryRepository $categoryRepository, ProgramRepository $programRepository): Response
     {
 
         $categories = $categoryRepository->findOneBy(['name' => $categoryName]);
-        if (! $categories) {
+        if (!$categories) {
             throw $this->createNotFoundException('Aucune catégorie nommée ainsi.');
         }
         $series = $programRepository->findBy(['category' => $categories]);
@@ -36,5 +53,4 @@ class CategoryController extends AbstractController
         return $this->render('Category/show.html.twig', ['series' => $series]);
 
     }
-
 }
