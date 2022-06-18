@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Form\ProgramType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use ContainerVpZSsI4\getSaisonRepositoryService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,21 +41,15 @@ class ProgramController extends AbstractController
 
     }
 
-    #[Route('/{program_id}', methods: ['GET'], name: 'show')]
+    #[Route('/{program_id}', name: 'show', methods: ['GET'])]
     #[Entity('program', options: ['id' => 'program_id'])]
     public function show(Program $program): Response
     {
 
-        if (!$program) {
-
-            throw $this->createNotFoundException(
-                'no program with id : ' . $id . ' found in program\'s table.'
-            );
-        }
         return $this->render('Wild/show.html.twig', ['program' => $program]);
     }
 
-    #[Route('/{program_id}/season/{season_id}', methods: ['GET'], name: 'season_show')]
+    #[Route('/{program_id}/season/{season_id}', name: 'season_show', methods: ['GET'])]
     #[Entity('program', options: ['id' => 'program_id'])]
     #[Entity('season', options: ['id' => 'saison_id'])]
     public function showSeason(Saison $saison, Program $program): Response
@@ -65,7 +58,7 @@ class ProgramController extends AbstractController
         return $this->render('Wild/season_show.html.twig', ['saison' => $saison]);
     }
 
-    #[Route('/{program_id}/season/{season_id}/episode/{episode_id}', methods: ['GET'], name: 'episode_show')]
+    #[Route('/{program_id}/season/{season_id}/episode/{episode_id}', name: 'episode_show', methods: ['GET'])]
     #[Entity('program', options: ['id' => 'program_id'])]
     #[Entity('season', options: ['id' => 'saison_id'])]
     #[Entity('episode', options: ['id' => 'episode_id'])]
