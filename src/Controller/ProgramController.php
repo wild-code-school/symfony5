@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\ProgramType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use ContainerVpZSsI4\getSaisonRepositoryService;
@@ -29,14 +30,14 @@ class ProgramController extends AbstractController
     public function new(Request $request, ProgramRepository $programRepository): Response
     {
         $program = new Program();
-        $form = $this->createForm(ProgramRepository::class, $program);
+        $form = $this->createForm(ProgramType::class, $program);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $programRepository->add($program, true);
             return $this->redirectToRoute('category_index');
         }
-        return $this->renderForm('prrogram/new.html.twig', [
-            'from' => $form
+        return $this->renderForm('program/new.html.twig', [
+            'form' => $form
         ]);
 
     }
