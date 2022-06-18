@@ -32,11 +32,14 @@ class ProgramController extends AbstractController
         $program = new Program();
         $form = $this->createForm(ProgramType::class, $program);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $programRepository->add($program, true);
-            return $this->redirectToRoute('category_index');
+
+            return $this->redirectToRoute('program_index');
         }
         return $this->renderForm('program/new.html.twig', [
+            'program' => $program,
             'form' => $form
         ]);
 
@@ -56,7 +59,7 @@ class ProgramController extends AbstractController
         return $this->render('Wild/show.html.twig', ['program' => $program]);
     }
 
-    #[Route('/{program_id}/season/{season_id}', methods: ['GET'], name: 'season_show')]
+    #[Route('/{program_id}/season/{season_id}', name: 'season_show', methods: ['GET'])]
     #[Entity('program', options: ['id' => 'program_id'])]
     #[Entity('season', options: ['id' => 'saison_id'])]
     public function showSeason(Saison $saison, Program $program): Response
@@ -65,7 +68,7 @@ class ProgramController extends AbstractController
         return $this->render('Wild/season_show.html.twig', ['saison' => $saison]);
     }
 
-    #[Route('/{program_id}/season/{season_id}/episode/{episode_id}', methods: ['GET'], name: 'episode_show')]
+    #[Route('/{program_id}/season/{season_id}/episode/{episode_id}', name: 'episode_show', methods: ['GET'])]
     #[Entity('program', options: ['id' => 'program_id'])]
     #[Entity('season', options: ['id' => 'saison_id'])]
     #[Entity('episode', options: ['id' => 'episode_id'])]

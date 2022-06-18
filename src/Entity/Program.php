@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\ProgramRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProgramRepository::class)]
 class Program
@@ -15,9 +16,16 @@ class Program
     #[ORM\Column(type: 'integer')]
     private ?int $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\Unique(message: 'Titre existant.')]
+    #[Assert\NotBlank(message: 'Le champ ne peut être vide.')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le titre saisie {{ value }} est trop long, il ne devrait pas dépasser {{ limit }} caractères',
+    )]
     private ?string $title;
 
+    #[Assert\NotBlank(message: 'Le champ ne peut être vide.')]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $synopsis;
 
@@ -26,10 +34,12 @@ class Program
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'programs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'Le champ ne peut être vide.')]
     private ?Category $category;
 
     #[ORM\OneToMany(mappedBy: 'program', targetEntity: Saison::class)]
-    private  $saisons;
+    #[Assert\NotBlank(message: 'Le champ ne peut être vide.')]
+    private $saisons;
 
     public function __construct()
     {
