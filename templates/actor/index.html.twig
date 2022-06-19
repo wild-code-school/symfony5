@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Wild Series{% endblock %}
+
+{% block body %}
+    {% for actor in actors %}
+
+        {{ dump(actor.id) }}
+        <a>{{ actor.name }}</a>
+
+    {% endfor %}
+
+
+{% endblock %}

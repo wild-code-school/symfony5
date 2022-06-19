@@ -40,7 +40,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route ('/{categoryName}', methods: ['GET'], name: 'show', requirements: ['id' => '\d+'])]
+    #[Route ('/{categoryName}', name: 'show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(string $categoryName, CategoryRepository $categoryRepository, ProgramRepository $programRepository): Response
     {
 

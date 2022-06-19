@@ -29,7 +29,7 @@ class Saison
     private ?Program $program;
 
     #[ORM\OneToMany(mappedBy: 'saison', targetEntity: Episode::class)]
-    private $episodes;
+    private Collection $episodes;
 
     public function __construct()
     {
