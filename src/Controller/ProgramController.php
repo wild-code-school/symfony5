@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ProgramType;
+use App\Service\slugService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +13,6 @@ use App\Repository\ProgramRepository;
 use App\Entity\Program;
 use App\Entity\Episode;
 use App\Entity\Saison;
-
 
 
 #[Route('/program', name: 'program_')]
@@ -26,9 +26,11 @@ class ProgramController extends AbstractController
     }
 
     #[Route ('/new', name: 'new')]
-    public function new(Request $request, ProgramRepository $programRepository): Response
+    public function new(Request $request, ProgramRepository $programRepository, SlugService $slugService,): Response
     {
         $program = new Program();
+        $slug = $slugService->generate($program->getTitle());
+        $program->setSlug($slug);
         $form = $this->createForm(ProgramType::class, $program);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
