@@ -32,6 +32,7 @@ class Program
     private Collection $saisons;
 
     #[ORM\ManyToMany(targetEntity: Actor::class, mappedBy: 'programs')]
+    #[ORM\JoinTable(name: 'actors_programs')]
     private Collection $actors;
 
     public function __construct()

@@ -19,6 +19,7 @@ class Actor
     private ?string $name;
 
     #[ORM\ManyToMany(targetEntity: Program::class, inversedBy: 'actors')]
+    #[ORM\JoinTable(name: 'programs_actors')]
     private Collection $programs;
 
     public function __construct()
